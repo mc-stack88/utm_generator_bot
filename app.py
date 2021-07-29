@@ -8,7 +8,7 @@ import requests
 
 load_dotenv()
 TELE_TOKEN = os.getenv('telegramToken')
-
+BITLY_TOKEN = os.getenv('bitlyToken')
 updater = Updater(token=TELE_TOKEN, use_context=True)
 dispatcher = updater.dispatcher
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -22,7 +22,7 @@ discord = 0
 
 def BitlyShortener(url):
     header = {
-        "Authorization": "d157d5d332ae98f5a517d8b499f0cc7e7ff44131",
+        "Authorization": BITLY_TOKEN,
         "Content-Type": "application/json"
     }
     params = {
