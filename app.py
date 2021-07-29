@@ -4,6 +4,7 @@ import logging
 import os
 from dotenv import load_dotenv
 from urllib.parse import parse_qsl ,urlparse, urlencode, urlunparse
+import requests
 
 load_dotenv()
 TELE_TOKEN = os.getenv('telegramToken')
@@ -19,6 +20,23 @@ slack = 0
 whatsapp = 0
 discord = 0
 
+def BitlyShortener(url):
+    header = {
+        "Authorization": "d157d5d332ae98f5a517d8b499f0cc7e7ff44131",
+        "Content-Type": "application/json"
+    }
+    params = {
+        "long_url": url
+    }
+    response = requests.post("https://api-ssl.bitly.com/v4/shorten", json=params, headers=header)
+    data = response.json()
+    shortenedLink = data['link']
+    if shortenedLink:
+        return shortenedLink
+    else:
+        return("Shortening error")
+    # if 'link' in data.keys(): short_link = data['link']
+    # else: short_link = None
 
 def Urlify(social_media, count):
     baseURL = "https://www.getwithub.com"
@@ -30,48 +48,57 @@ def Urlify(social_media, count):
     url_new_query = urlencode(url_dict)
     url_parse = url_parse._replace(query=url_new_query)
     new_url = urlunparse(url_parse)
-    return(new_url)
+    short_url = BitlyShortener(new_url)
+    return(short_url)
 
 def echo(update, context):
     #user
     chat_id = update.effective_chat.id
     incoming_msg = update.message.text
     social_media = "did not work"
-    if("twitter" in incoming_msg.lower()):
+    
+    if(incoming_msg.lower().startswith("twitter")):
         social_media = "twitter"
         global twitter
         twitter = twitter + 1 
-        resToUser = Urlify(social_media, twitter)
+        replystring = "\nHeres your link for " + social_media + " with no = " + str(twitter) + "\n" 
+        resToUser = Urlify(social_media, twitter)+replystring 
 
-    elif("reddit" in incoming_msg.lower()):
+    elif(incoming_msg.lower().startswith("reddit")):
         social_media = "reddit"
         global reddit
         reddit = reddit + 1 
-        resToUser = Urlify(social_media, reddit)
+        replystring = "\nHeres your link for " + social_media + " with no = " + str(reddit) + "\n" 
+        resToUser = Urlify(social_media, reddit)+replystring
 
-    elif("linkedin" in incoming_msg.lower()):
+    elif(incoming_msg.lower().startswith("linkedin")):
         social_media = "linkedin"
         global linkedin
         linkedin = linkedin + 1 
-        resToUser = Urlify(social_media, linkedin)
+        replystring = "\nHeres your link for " + social_media + " with no = " + str(linkedin) + "\n" 
+        resToUser = Urlify(social_media, linkedin)+replystring
 
-    elif("discord" in incoming_msg.lower()):
+    elif(incoming_msg.lower().startswith("discord")):
         social_media = "discord"
         global discord
         discord = discord + 1 
-        resToUser = Urlify(social_media, discord)
+        replystring = "\nHeres your link for " + social_media + " with no = " + str(discord) + "\n" 
+        resToUser = Urlify(social_media, discord)+ replystring
 
-    elif("slack" in incoming_msg.lower()):
+    elif(incoming_msg.lower().startswith("slack")):
         social_media = "slack"
         global slack
         slack = slack + 1 
-        resToUser = Urlify(social_media, slack)
+        replystring = "\nHeres your link for " + social_media + " with no = " + str(slack) + "\n" 
+        resToUser = Urlify(social_media, slack)+replystring
 
-    elif("whatsapp" in incoming_msg.lower()):
+    elif(incoming_msg.lower().startswith("whatsapp")):
         social_media = "whatsapp"
         global whataspp
         whataspp = whatsapp + 1 
-        resToUser = Urlify(social_media, whataspp)
+        replystring = "\nHeres your link for " + social_media + " with no = " + str(whatsapp) + "\n" 
+        resToUser = Urlify(social_media, whataspp)+ replystring
+    
     else:
         resToUser = "cool"
 
