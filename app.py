@@ -1,7 +1,5 @@
 #packages
-from telegram.ext import Updater, InlineQueryHandler, CommandHandler, MessageHandler, Filters
-import requests
-import re
+from telegram.ext import Updater, MessageHandler, Filters
 import logging
 import os
 from dotenv import load_dotenv
@@ -39,13 +37,43 @@ def echo(update, context):
     chat_id = update.effective_chat.id
     incoming_msg = update.message.text
     social_media = "did not work"
-    if("twitter link" in incoming_msg.lower()):
+    if("twitter" in incoming_msg.lower()):
         social_media = "twitter"
         global twitter
         twitter = twitter + 1 
-        print(twitter)
         resToUser = Urlify(social_media, twitter)
-        print(resToUser)
+
+    elif("reddit" in incoming_msg.lower()):
+        social_media = "reddit"
+        global reddit
+        reddit = reddit + 1 
+        resToUser = Urlify(social_media, reddit)
+
+    elif("linkedin" in incoming_msg.lower()):
+        social_media = "linkedin"
+        global linkedin
+        linkedin = linkedin + 1 
+        resToUser = Urlify(social_media, linkedin)
+
+    elif("discord" in incoming_msg.lower()):
+        social_media = "discord"
+        global discord
+        discord = discord + 1 
+        resToUser = Urlify(social_media, discord)
+
+    elif("slack" in incoming_msg.lower()):
+        social_media = "slack"
+        global slack
+        slack = slack + 1 
+        resToUser = Urlify(social_media, slack)
+
+    elif("whatsapp" in incoming_msg.lower()):
+        social_media = "whatsapp"
+        global whataspp
+        whataspp = whatsapp + 1 
+        resToUser = Urlify(social_media, whataspp)
+    else:
+        resToUser = "cool"
 
     context.bot.send_message(chat_id=update.effective_chat.id, text=resToUser)
 
