@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 from urllib.parse import parse_qsl ,urlparse, urlencode, urlunparse
 import requests
-
+import uuid
 load_dotenv()
 TELE_TOKEN = os.getenv('telegramToken')
 BITLY_TOKEN = os.getenv('bitlyToken')
@@ -13,12 +13,6 @@ updater = Updater(token=TELE_TOKEN, use_context=True)
 dispatcher = updater.dispatcher
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-twitter = 2
-reddit = 0
-linkedin = 0 
-slack = 0
-whatsapp = 0
-discord = 0
 
 def BitlyShortener(url):
     header = {
@@ -38,9 +32,9 @@ def BitlyShortener(url):
     # if 'link' in data.keys(): short_link = data['link']
     # else: short_link = None
 
-def Urlify(social_media, count):
+def Urlify(social_media, uniqueID):
     baseURL = "https://www.getwithub.com"
-    params = {"utm_campaign":"withub-beta-access", "utm_medium": social_media, "utm_source": "website" , "utm_term": count}
+    params = {"utm_campaign":"withub-beta-access", "utm_medium": social_media, "utm_source": "website" , "utm_term": uniqueID}
     url_parse = urlparse(baseURL)
     query = url_parse.query
     url_dict = dict(parse_qsl(query))
@@ -56,48 +50,37 @@ def echo(update, context):
     chat_id = update.effective_chat.id
     incoming_msg = update.message.text
     social_media = "did not work"
-    
+    linkID = uuid.uuid4()
+
     if(incoming_msg.lower().startswith("twitter")):
         social_media = "twitter"
-        global twitter
-        twitter = twitter + 1 
-        replystring = "\nHeres your link for " + social_media + " with no = " + str(twitter) + "\n" 
-        resToUser = Urlify(social_media, twitter)+replystring 
+        replystring = "\nlink for : " + social_media + "\nunique ID = " + str(linkID) + "\n" 
+        resToUser = Urlify(social_media, linkID)+replystring 
 
     elif(incoming_msg.lower().startswith("reddit")):
         social_media = "reddit"
-        global reddit
-        reddit = reddit + 1 
-        replystring = "\nHeres your link for " + social_media + " with no = " + str(reddit) + "\n" 
-        resToUser = Urlify(social_media, reddit)+replystring
+        replystring = "\nlink for : " + social_media + "\nunique ID = " + str(linkID) + "\n" 
+        resToUser = Urlify(social_media, linkID)+replystring
 
     elif(incoming_msg.lower().startswith("linkedin")):
         social_media = "linkedin"
-        global linkedin
-        linkedin = linkedin + 1 
-        replystring = "\nHeres your link for " + social_media + " with no = " + str(linkedin) + "\n" 
-        resToUser = Urlify(social_media, linkedin)+replystring
+        replystring = "\nlink for : " + social_media + "\nunique ID = " + str(linkID) + "\n" 
+        resToUser = Urlify(social_media, linkID)+replystring
 
     elif(incoming_msg.lower().startswith("discord")):
         social_media = "discord"
-        global discord
-        discord = discord + 1 
-        replystring = "\nHeres your link for " + social_media + " with no = " + str(discord) + "\n" 
-        resToUser = Urlify(social_media, discord)+ replystring
+        replystring = "\nlink for : " + social_media + "\nunique ID = " + str(linkID) + "\n" 
+        resToUser = Urlify(social_media, linkID)+ replystring
 
     elif(incoming_msg.lower().startswith("slack")):
         social_media = "slack"
-        global slack
-        slack = slack + 1 
-        replystring = "\nHeres your link for " + social_media + " with no = " + str(slack) + "\n" 
-        resToUser = Urlify(social_media, slack)+replystring
+        replystring = "\nlink for : " + social_media + "\nunique ID = " + str(linkID) + "\n" 
+        resToUser = Urlify(social_media, linkID)+replystring
 
     elif(incoming_msg.lower().startswith("whatsapp")):
         social_media = "whatsapp"
-        global whataspp
-        whataspp = whatsapp + 1 
-        replystring = "\nHeres your link for " + social_media + " with no = " + str(whatsapp) + "\n" 
-        resToUser = Urlify(social_media, whataspp)+ replystring
+        replystring = "\nlink for : " + social_media + "\nunique ID = " + str(linkID) + "\n" 
+        resToUser = Urlify(social_media, linkID)+ replystring
     
     else:
         resToUser = "cool"
